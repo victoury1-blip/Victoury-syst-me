@@ -51,3 +51,7 @@ ad_set_ids: []
 
 # Only used when ad_set_ids is empty: restrict auto-discovery to these campaigns.
 campaign_ids: []
+
+# --- Campaign analytics report (meta_ads/campaign_report.py) ---
+# Lookback window, in days, for the account-wide campaign report.
+report_lookback_days: 30

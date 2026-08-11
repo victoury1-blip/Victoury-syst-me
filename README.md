@@ -16,6 +16,17 @@
 5. عندو **Dry Run** (`dry_run: true` فـ `config.yaml`) — كيقرا وكيقترح غير بلا ما يبدل والو فالحقيقة، حتى تتأكد اللي القواعد صافية
 6. كيكتب تقرير يومي (GitHub Actions Summary) + تنبيه Telegram اختياري
 
+## تقرير تحليلي شامل على كل الحملات (Campaign Analytics Report)
+
+بزيادة على تحسين الميزانية، كاين سكريبت `meta_ads/campaign_report.py` كيدير جرد شامل على **جميع الحملات** فالحساب ديالك (ماشي غير الـ Ad Sets النشيطة)، وكيعطيك جدول: Spend, Impressions, Clicks, CTR, CPC, Résultats, CPA, ROAS — لكل حملة، مرتبة من الأكثر صرف للأقل.
+
+**كيفاش تشغلو:**
+- من GitHub: **Actions → Meta Ads Campaign Analytics Report → Run workflow** (بوطون يدوي، وقتما بغيتي)
+- كيخدم أوتوماتيك تانية كل نهار الإثنين (اختياري، تقدر تبدلو أو تحيدو من `.github/workflows/campaign-report.yml`)
+- النتيجة كتبان فـ Actions → آخر تشغيلة → Summary
+
+هاد التقرير **مايبدل حتى حاجة** فالحساب — غير قراءة/تحليل. الهدف: تشوف الأداء ديال كل الحملات وتقرر واش خاصك تزيد حملة جديدة ولا لا.
+
 ## 1) تحضير حساب Meta for Developers
 
 1. سير لـ [developers.facebook.com](https://developers.facebook.com) ودخل بحساب الفيسبوك اللي عندو صلاحية على الـ Ad Account
@@ -64,8 +75,11 @@ meta_ads/
   rules.py                   # منطق القرار (زيادة/نقصان/وقف)
   state.py                   # تتبع آخر تبديل لكل Ad Set (cooldown)
   alerts.py                  # تقرير GitHub Summary + Telegram
-  main.py                    # التشغيل الرئيسي
-.github/workflows/daily-budget-optimizer.yml   # الجدولة اليومية
+  main.py                    # التشغيل الرئيسي (تحسين الميزانية اليومي)
+  report.py                  # منطق بناء تقرير الحملات
+  campaign_report.py         # التشغيل الرئيسي (التقرير التحليلي الشامل)
+.github/workflows/daily-budget-optimizer.yml   # الجدولة اليومية (تحسين الميزانية)
+.github/workflows/campaign-report.yml          # التقرير التحليلي (يدوي + أسبوعي)
 ```
 
 ## ⚠️ ملاحظات أمان مهمة

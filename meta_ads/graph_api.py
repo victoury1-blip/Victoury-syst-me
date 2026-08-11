@@ -50,14 +50,35 @@ class MetaGraphClient:
     def get_ad_set(self, ad_set_id):
         return self._get(ad_set_id, params={"fields": "id,name,status,daily_budget,campaign_id"})
 
-    def get_insights(self, ad_set_id, lookback_days):
+    def list_campaigns(self, ad_account_id):
+        params = {
+            "fields": "id,name,objective,status,effective_status,daily_budget,lifetime_budget",
+            "limit": 200,
+        }
+        data = self._get(f"{ad_account_id}/campaigns", params=params)
+        return data.get("data", [])
+
+    @staticmethod
+    def _time_range(lookback_days):
         until = date.today() - timedelta(days=1)
         since = until - timedelta(days=max(lookback_days, 1) - 1)
+        return json.dumps({"since": since.isoformat(), "until": until.isoformat()})
+
+    def get_insights(self, object_id, lookback_days):
         params = {
             "fields": "spend,actions",
-            "time_range": json.dumps({"since": since.isoformat(), "until": until.isoformat()}),
+            "time_range": self._time_range(lookback_days),
         }
-        data = self._get(f"{ad_set_id}/insights", params=params)
+        data = self._get(f"{object_id}/insights", params=params)
+        rows = data.get("data", [])
+        return rows[0] if rows else None
+
+    def get_insights_full(self, object_id, lookback_days):
+        params = {
+            "fields": "spend,actions,impressions,clicks,ctr,cpc,cpm,reach,purchase_roas",
+            "time_range": self._time_range(lookback_days),
+        }
+        data = self._get(f"{object_id}/insights", params=params)
         rows = data.get("data", [])
         return rows[0] if rows else None
 
