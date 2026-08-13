@@ -1,0 +1,57 @@
+# Meta (Facebook) Ads — Daily Budget Optimizer configuration
+# No secrets here. Credentials (access token, ad account id) come from
+# environment variables / GitHub Actions secrets — see .env.example and README.md.
+
+# Set to false only once you have tested with dry_run: true and trust the results.
+dry_run: true
+
+# Account currency (used only for display/logging; Graph API amounts are always
+# converted to/from the account's minor currency unit, e.g. cents for USD).
+currency: "USD"
+
+# Aggregate insights over the last N days before deciding, to smooth out
+# single-day noise (e.g. one lucky/unlucky purchase).
+lookback_days: 3
+
+# Do not act unless at least this many results (purchases) happened in the
+# lookback window — avoids reacting to tiny, statistically meaningless samples.
+min_results_for_decision: 3
+
+# Minimum number of days to wait between two budget changes on the same ad set,
+# so the algorithm has time to re-stabilize after a change.
+min_days_between_changes: 2
+
+# --- Budget rules ---
+# Target cost per result (purchase), in account currency.
+target_cpa: 2.0
+
+# Increase daily budget by this fraction when CPA <= target_cpa.
+increase_pct: 0.20
+
+# Decrease daily budget by this fraction when CPA > target_cpa (but below the
+# pause threshold).
+decrease_pct: 0.20
+
+# Pause the ad set entirely when CPA > target_cpa * pause_cpa_multiplier.
+pause_cpa_multiplier: 3.0
+
+# Safety cap/floor on daily budget, in account currency.
+max_daily_budget: 100.0
+min_daily_budget: 5.0
+
+# Meta Graph API action_type values counted as a "result" (purchase).
+purchase_action_types:
+  - "omni_purchase"
+  - "offsite_conversion.fb_pixel_purchase"
+  - "purchase"
+
+# Ad sets to manage. Leave empty to auto-discover every ACTIVE ad set in the
+# account (optionally restricted to campaign_ids below).
+ad_set_ids: []
+
+# Only used when ad_set_ids is empty: restrict auto-discovery to these campaigns.
+campaign_ids: []
+
+# --- Campaign analytics report (meta_ads/campaign_report.py) ---
+# Lookback window, in days, for the account-wide campaign report.
+report_lookback_days: 30
