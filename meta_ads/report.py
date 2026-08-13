@@ -47,14 +47,14 @@ def format_report(rows, lookback_days, currency):
     lines = [
         f"# Meta Ads Campaign Analytics — {period}",
         "",
-        "| Campaign | Status | Spend | Impressions | Clicks | CTR | CPC | Results | CPA | ROAS |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        "| Campaign | Campaign ID | Status | Spend | Impressions | Clicks | CTR | CPC | Results | CPA | ROAS |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for r in sorted(rows, key=lambda x: x["spend"], reverse=True):
         cpa_str = f"{r['cpa']:.2f}" if r["cpa"] is not None else "-"
         roas_str = f"{r['roas']:.2f}" if r["roas"] is not None else "-"
         lines.append(
-            f"| {r['name']} | {r['status']} | {r['spend']:.2f} {currency} | {r['impressions']} | "
+            f"| {r['name']} | `{r['id']}` | {r['status']} | {r['spend']:.2f} {currency} | {r['impressions']} | "
             f"{r['clicks']} | {r['ctr']:.2f}% | {r['cpc']:.2f} | {r['results']:.0f} | {cpa_str} | {roas_str} |"
         )
     return lines
