@@ -27,6 +27,17 @@
 
 هاد التقرير **مايبدل حتى حاجة** فالحساب — غير قراءة/تحليل. الهدف: تشوف الأداء ديال كل الحملات وتقرر واش خاصك تزيد حملة جديدة ولا لا.
 
+## تكرار حملة موجودة (Duplicate Campaign)
+
+سكريبت `meta_ads/duplicate_campaign.py` كيدير نسخة كاملة (Campaign + Ad Sets + Ads، بنفس الجمهور والإعدادات) من حملة قديمة خدامة، باش ماتضطرش تبني كولشي من الصفر.
+
+**مهم:** النسخة الجديدة كتتخلق **PAUSED** ديما — **مايبداش يصرف فلوس أوتوماتيك**. خاصك تدخل لـ Ads Manager، تراجع/تبدل الكرياتيف والمنتج، ومن بعد تفعلها يدويا ملي تكون راضي عليها.
+
+**كيفاش تشغلو:**
+- Actions → **Meta Ads Duplicate Campaign** → Run workflow
+- عمر `source_campaign_name` باسم الحملة اللي بغيتي تكررها بالضبط (مثلا `Retargeting`)
+- النتيجة (ID ديال الحملة الجديدة + رابط Ads Manager) كتبان فـ Summary
+
 ## 1) تحضير حساب Meta for Developers
 
 1. سير لـ [developers.facebook.com](https://developers.facebook.com) ودخل بحساب الفيسبوك اللي عندو صلاحية على الـ Ad Account
@@ -78,8 +89,10 @@ meta_ads/
   main.py                    # التشغيل الرئيسي (تحسين الميزانية اليومي)
   report.py                  # منطق بناء تقرير الحملات
   campaign_report.py         # التشغيل الرئيسي (التقرير التحليلي الشامل)
+  duplicate_campaign.py      # تكرار حملة موجودة (PAUSED دايما)
 .github/workflows/daily-budget-optimizer.yml   # الجدولة اليومية (تحسين الميزانية)
 .github/workflows/campaign-report.yml          # التقرير التحليلي (يدوي + أسبوعي)
+.github/workflows/duplicate-campaign.yml       # تكرار حملة (يدوي)
 ```
 
 ## ⚠️ ملاحظات أمان مهمة
