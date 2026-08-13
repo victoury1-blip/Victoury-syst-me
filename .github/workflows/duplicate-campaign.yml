@@ -1,0 +1,39 @@
+name: Meta Ads Duplicate Campaign
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_campaign_name:
+        description: "Exact name of the existing campaign to duplicate"
+        required: true
+        default: "Retargeting"
+      new_campaign_suffix:
+        description: "Suffix appended to the duplicate's name"
+        required: false
+        default: " - Relance"
+
+permissions:
+  contents: read
+
+jobs:
+  duplicate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Duplicate campaign (created PAUSED — no spend until you activate it)
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_AD_ACCOUNT_ID: ${{ secrets.META_AD_ACCOUNT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SOURCE_CAMPAIGN_NAME: ${{ inputs.source_campaign_name }}
+          NEW_CAMPAIGN_SUFFIX: ${{ inputs.new_campaign_suffix }}
+        run: python -m meta_ads.duplicate_campaign

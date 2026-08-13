@@ -91,3 +91,19 @@ class MetaGraphClient:
 
     def pause_ad_set(self, ad_set_id):
         return self._post(ad_set_id, data={"status": "PAUSED"})
+
+    def get_campaign_by_name(self, ad_account_id, name):
+        for c in self.list_campaigns(ad_account_id):
+            if c.get("name") == name:
+                return c
+        return None
+
+    def copy_campaign(self, campaign_id, rename_suffix, deep_copy=True, status_option="PAUSED"):
+        data = {
+            "deep_copy": "true" if deep_copy else "false",
+            "status_option": status_option,
+            "rename_options": json.dumps(
+                {"rename_strategy": "DEEP_RENAME", "rename_suffix": rename_suffix}
+            ),
+        }
+        return self._post(f"{campaign_id}/copies", data=data)
