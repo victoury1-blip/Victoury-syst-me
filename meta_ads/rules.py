@@ -12,11 +12,19 @@ class Decision:
 def extract_results(insights_row, purchase_action_types):
     if not insights_row:
         return 0.0
-    total = 0.0
+    # Meta's `actions` array reports the same purchase event under several
+    # overlapping action_types at once (e.g. omni_purchase, purchase and
+    # offsite_conversion.fb_pixel_purchase are usually all the same
+    # conversions counted three different ways). Summing them triple-counts
+    # a single sale, so take the first match in `purchase_action_types`
+    # (a priority-ordered list), not a sum across all of them.
+    values_by_type = {}
     for a in insights_row.get("actions", []) or []:
-        if a.get("action_type") in purchase_action_types:
-            total += float(a.get("value", 0))
-    return total
+        values_by_type[a.get("action_type")] = float(a.get("value", 0))
+    for action_type in purchase_action_types:
+        if action_type in values_by_type:
+            return values_by_type[action_type]
+    return 0.0
 
 
 def decide(insights_row, current_budget, days_since_last_change, config):
