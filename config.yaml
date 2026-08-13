@@ -61,3 +61,9 @@ campaign_ids: []
 # or "max" for lifetime stats since each campaign was created (Meta's
 # own "maximum" date preset, capped at roughly the last 37 months).
 report_lookback_days: "max"
+
+# --- Deep audit (meta_ads/campaign_audit.py) ---
+# The audit always covers every ACTIVE campaign, plus the top 5 paused/ended
+# campaigns by ROAS that spent at least this much (in account currency) —
+# keeps the report focused on campaigns worth learning from.
+audit_min_historical_spend: 20.0

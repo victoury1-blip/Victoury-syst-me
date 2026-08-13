@@ -107,3 +107,30 @@ class MetaGraphClient:
             ),
         }
         return self._post(f"{campaign_id}/copies", data=data)
+
+    def list_custom_audiences(self, ad_account_id):
+        params = {
+            "fields": "id,name,subtype,approximate_count_lower_bound,approximate_count_upper_bound,data_source,description",
+            "limit": 200,
+        }
+        data = self._get(f"{ad_account_id}/customaudiences", params=params)
+        return data.get("data", [])
+
+    def list_ad_sets_for_campaign(self, campaign_id):
+        params = {
+            "fields": "id,name,status,effective_status,daily_budget,targeting,optimization_goal,billing_event",
+            "limit": 200,
+        }
+        data = self._get(f"{campaign_id}/adsets", params=params)
+        return data.get("data", [])
+
+    def list_ads_for_campaign(self, campaign_id):
+        params = {
+            "fields": (
+                "id,name,status,effective_status,"
+                "creative{title,body,call_to_action_type,thumbnail_url,object_story_spec}"
+            ),
+            "limit": 200,
+        }
+        data = self._get(f"{campaign_id}/ads", params=params)
+        return data.get("data", [])

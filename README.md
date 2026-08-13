@@ -27,6 +27,20 @@
 
 هاد التقرير **مايبدل حتى حاجة** فالحساب — غير قراءة/تحليل. الهدف: تشوف الأداء ديال كل الحملات وتقرر واش خاصك تزيد حملة جديدة ولا لا.
 
+## تدقيق شامل (Deep Audit) — جماهير، استهداف، كرياتيف، Funnel
+
+سكريبت `meta_ads/campaign_audit.py` كيدير غوص عميق (قراءة فقط، مايبدل حتى حاجة) فـ:
+- **الجماهير المخصصة (Custom Audiences)**: الأسماء، الحجم التقريبي، والمصدر (Website/Lookalike/Customer List...)
+- **الاستهداف (Targeting)** لكل Ad Set فالحملات النشيطة + أحسن 5 حملات قديمة (حسب ROAS): العمر، الجنس، البلد، الاهتمامات، Custom Audiences المستعملة، Placements
+- **الكرياتيف** لكل إعلان: النص، زر الـ CTA، الرابط
+- **القمع الكامل (Funnel)**: View Content → Add to Cart → Initiate Checkout → Purchase، بالتكلفة فكل مرحلة
+
+**كيفاش تشغلو:**
+- Actions → **Meta Ads Deep Audit** → Run workflow
+- النتيجة كتبان فـ Summary (تقرير طويل، خاصك تسكرولي)
+
+هادشي كيعطينا الصورة الكاملة **علاش** حملة معينة خدمة مزيان (شنو الجمهور، شنو الاستهداف، شنو الكرياتيف)، ماشي غير قداش خدمة — باش نقدرو نكرروا النجاح فحملات جداد.
+
 ## تكرار حملة موجودة (Duplicate Campaign)
 
 سكريبت `meta_ads/duplicate_campaign.py` كيدير نسخة كاملة (Campaign + Ad Sets + Ads، بنفس الجمهور والإعدادات) من حملة قديمة خدامة، باش ماتضطرش تبني كولشي من الصفر.
@@ -89,9 +103,12 @@ meta_ads/
   main.py                    # التشغيل الرئيسي (تحسين الميزانية اليومي)
   report.py                  # منطق بناء تقرير الحملات
   campaign_report.py         # التشغيل الرئيسي (التقرير التحليلي الشامل)
+  audit.py                   # منطق التدقيق الشامل (جماهير، استهداف، كرياتيف، funnel)
+  campaign_audit.py          # التشغيل الرئيسي (التدقيق الشامل)
   duplicate_campaign.py      # تكرار حملة موجودة (PAUSED دايما)
 .github/workflows/daily-budget-optimizer.yml   # الجدولة اليومية (تحسين الميزانية)
 .github/workflows/campaign-report.yml          # التقرير التحليلي (يدوي + أسبوعي)
+.github/workflows/campaign-audit.yml           # التدقيق الشامل (يدوي)
 .github/workflows/duplicate-campaign.yml       # تكرار حملة (يدوي)
 ```
 
