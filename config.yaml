@@ -53,5 +53,7 @@ ad_set_ids: []
 campaign_ids: []
 
 # --- Campaign analytics report (meta_ads/campaign_report.py) ---
-# Lookback window, in days, for the account-wide campaign report.
-report_lookback_days: 30
+# Lookback window for the account-wide campaign report: a number of days,
+# or "max" for lifetime stats since each campaign was created (Meta's
+# own "maximum" date preset, capped at roughly the last 37 months).
+report_lookback_days: "max"

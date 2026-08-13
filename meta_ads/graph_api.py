@@ -74,10 +74,14 @@ class MetaGraphClient:
         return rows[0] if rows else None
 
     def get_insights_full(self, object_id, lookback_days):
-        params = {
-            "fields": "spend,actions,impressions,clicks,ctr,cpc,cpm,reach,purchase_roas",
-            "time_range": self._time_range(lookback_days),
-        }
+        params = {"fields": "spend,actions,impressions,clicks,ctr,cpc,cpm,reach,purchase_roas"}
+        if lookback_days in (None, "max", "maximum"):
+            # Meta's own "maximum" date preset — everything available for this
+            # object, i.e. lifetime since the campaign/ad set was created
+            # (API limits this to roughly the last 37 months).
+            params["date_preset"] = "maximum"
+        else:
+            params["time_range"] = self._time_range(lookback_days)
         data = self._get(f"{object_id}/insights", params=params)
         rows = data.get("data", [])
         return rows[0] if rows else None
