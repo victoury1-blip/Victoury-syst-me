@@ -142,3 +142,26 @@ class MetaGraphClient:
         }
         data = self._get(f"{campaign_id}/ads", params=params)
         return data.get("data", [])
+
+    def create_website_custom_audience(self, ad_account_id, name, pixel_id, event, retention_days, exclude_event=None):
+        include_rule = {
+            "event_sources": [{"id": str(pixel_id), "type": "pixel"}],
+            "retention_seconds": int(retention_days) * 86400,
+            "filter": {"operator": "and", "filters": [{"field": "event", "operator": "eq", "value": event}]},
+        }
+        rule = {"inclusions": {"operator": "or", "rules": [include_rule]}}
+
+        if exclude_event:
+            exclude_rule = {
+                "event_sources": [{"id": str(pixel_id), "type": "pixel"}],
+                "retention_seconds": int(retention_days) * 86400,
+                "filter": {"operator": "and", "filters": [{"field": "event", "operator": "eq", "value": exclude_event}]},
+            }
+            rule["exclusions"] = {"operator": "or", "rules": [exclude_rule]}
+
+        data = {
+            "name": name,
+            "subtype": "WEBSITE",
+            "rule": json.dumps(rule),
+        }
+        return self._post(f"{ad_account_id}/customaudiences", data=data)
