@@ -164,3 +164,28 @@ class MetaGraphClient:
             "rule": json.dumps(rule),
         }
         return self._post(f"{ad_account_id}/customaudiences", data=data)
+
+    def create_ad_set(
+        self,
+        ad_account_id,
+        campaign_id,
+        name,
+        daily_budget_minor_units,
+        targeting,
+        pixel_id,
+        optimization_goal="OFFSITE_CONVERSIONS",
+        billing_event="IMPRESSIONS",
+        status="PAUSED",
+    ):
+        data = {
+            "name": name,
+            "campaign_id": campaign_id,
+            "daily_budget": int(daily_budget_minor_units),
+            "billing_event": billing_event,
+            "optimization_goal": optimization_goal,
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": json.dumps(targeting),
+            "status": status,
+            "promoted_object": json.dumps({"pixel_id": str(pixel_id), "custom_event_type": "PURCHASE"}),
+        }
+        return self._post(f"{ad_account_id}/adsets", data=data)
