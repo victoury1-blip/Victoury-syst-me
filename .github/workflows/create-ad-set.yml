@@ -1,0 +1,44 @@
+name: Meta Ads Create Ad Set
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_campaign_name:
+        description: "Exact name of the campaign to add the ad set to"
+        required: true
+        default: "SOLDE ENSEMBLE"
+      new_ad_set_name:
+        description: "Name for the new ad set"
+        required: true
+        default: "AD SET 2 - Ensemble Sport"
+      new_ad_set_daily_budget:
+        description: "Daily budget for the new ad set (account currency)"
+        required: true
+        default: "15"
+
+permissions:
+  contents: read
+
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create ad set (PAUSED — no spend until creative is added and it's activated)
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_AD_ACCOUNT_ID: ${{ secrets.META_AD_ACCOUNT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TARGET_CAMPAIGN_NAME: ${{ inputs.target_campaign_name }}
+          NEW_AD_SET_NAME: ${{ inputs.new_ad_set_name }}
+          NEW_AD_SET_DAILY_BUDGET: ${{ inputs.new_ad_set_daily_budget }}
+        run: python -m meta_ads.create_ad_set
