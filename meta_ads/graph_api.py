@@ -110,10 +110,18 @@ class MetaGraphClient:
 
     def list_custom_audiences(self, ad_account_id):
         params = {
-            "fields": "id,name,subtype,approximate_count_lower_bound,approximate_count_upper_bound,data_source,description",
+            "fields": "id,name,subtype,approximate_count_lower_bound,approximate_count_upper_bound,data_source,description,time_updated",
             "limit": 200,
         }
         data = self._get(f"{ad_account_id}/customaudiences", params=params)
+        return data.get("data", [])
+
+    def list_pixels(self, ad_account_id):
+        params = {
+            "fields": "id,name,last_fired_time,creation_time,is_unavailable",
+            "limit": 200,
+        }
+        data = self._get(f"{ad_account_id}/adspixels", params=params)
         return data.get("data", [])
 
     def list_ad_sets_for_campaign(self, campaign_id):
