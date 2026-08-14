@@ -161,7 +161,6 @@ class MetaGraphClient:
 
         data = {
             "name": name,
-            "subtype": "WEBSITE",
             "rule": json.dumps(rule),
         }
         return self._post(f"{ad_account_id}/customaudiences", data=data)
