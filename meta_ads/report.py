@@ -43,7 +43,12 @@ def build_campaign_report(client, ad_account_id, lookback_days, purchase_action_
 
 
 def format_report(rows, lookback_days, currency):
-    period = "lifetime (since each campaign started)" if lookback_days in (None, "max", "maximum") else f"last {lookback_days} days"
+    if lookback_days in (None, "max", "maximum"):
+        period = "lifetime (since each campaign started)"
+    elif lookback_days == "today":
+        period = "today so far"
+    else:
+        period = f"last {lookback_days} days"
     lines = [
         f"# Meta Ads Campaign Analytics — {period}",
         "",

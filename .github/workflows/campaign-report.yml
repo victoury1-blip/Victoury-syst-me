@@ -1,7 +1,12 @@
 name: Meta Ads Campaign Analytics Report
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      lookback:
+        description: "Period: a number of days, 'today', or 'max' for lifetime. Leave empty to use config.yaml's default."
+        required: false
+        default: ""
   schedule:
     - cron: "0 8 * * 1" # every Monday 08:00 UTC — edit or remove as needed
 
@@ -24,4 +29,5 @@ jobs:
           META_AD_ACCOUNT_ID: ${{ secrets.META_AD_ACCOUNT_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          REPORT_LOOKBACK_DAYS: ${{ inputs.lookback }}
         run: python -m meta_ads.campaign_report

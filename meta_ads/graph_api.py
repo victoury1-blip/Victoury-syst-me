@@ -80,6 +80,10 @@ class MetaGraphClient:
             # object, i.e. lifetime since the campaign/ad set was created
             # (API limits this to roughly the last 37 months).
             params["date_preset"] = "maximum"
+        elif lookback_days == "today":
+            # Today so far — partial/still accumulating, unlike the other
+            # options which deliberately exclude the current day.
+            params["date_preset"] = "today"
         else:
             params["time_range"] = self._time_range(lookback_days)
         data = self._get(f"{object_id}/insights", params=params)
