@@ -1,0 +1,44 @@
+name: Meta Ads Ad Set Check
+
+on:
+  workflow_dispatch:
+    inputs:
+      campaign_name:
+        description: "Campaign containing the ad set"
+        required: true
+        default: "SOLDE ENSEMBLE"
+      ad_set_name:
+        description: "Exact ad set name to check"
+        required: true
+        default: "AD SET 1 SOLDE"
+      lookback_days:
+        description: "Number of days, 'today', or 'max'"
+        required: true
+        default: "4"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check ad set performance (read-only)
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_AD_ACCOUNT_ID: ${{ secrets.META_AD_ACCOUNT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CAMPAIGN_NAME: ${{ inputs.campaign_name }}
+          AD_SET_NAME: ${{ inputs.ad_set_name }}
+          LOOKBACK_DAYS: ${{ inputs.lookback_days }}
+        run: python -m meta_ads.ad_set_check
