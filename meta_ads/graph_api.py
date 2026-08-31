@@ -169,6 +169,15 @@ class MetaGraphClient:
         }
         return self._post(f"{ad_account_id}/customaudiences", data=data)
 
+    def create_campaign(self, ad_account_id, name, objective="OUTCOME_SALES", status="PAUSED"):
+        data = {
+            "name": name,
+            "objective": objective,
+            "status": status,
+            "special_ad_categories": json.dumps([]),
+        }
+        return self._post(f"{ad_account_id}/campaigns", data=data)
+
     def create_ad_set(
         self,
         ad_account_id,
