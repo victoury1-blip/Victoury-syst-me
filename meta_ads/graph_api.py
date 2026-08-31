@@ -175,6 +175,10 @@ class MetaGraphClient:
             "objective": objective,
             "status": status,
             "special_ad_categories": json.dumps([]),
+            # Required when the campaign doesn't use a campaign-level budget
+            # (i.e. budgets live on each ad set, ABO-style, as this account
+            # does). False = ad sets don't share/borrow each other's budget.
+            "is_adset_budget_sharing_enabled": "false",
         }
         return self._post(f"{ad_account_id}/campaigns", data=data)
 
